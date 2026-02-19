@@ -34,7 +34,8 @@ A React application for managing service logs with draft support, auto-save, and
 
 ### Data Persistence
 
-- All drafts and service logs persist after page reload (localStorage via redux-persist)
+- Service logs and drafts persist after page reload (localStorage via redux-persist)
+- New log form (when no draft selected) auto-saves and restores on reload
 
 ## Getting Started
 
@@ -78,24 +79,50 @@ npm run lint
 ```
 src/
 ├── components/
-│   ├── EditServiceLogDialog/    # Edit log dialog
-│   ├── ServiceLogForm/          # Create form with draft support
+│   ├── EditServiceLogDialog/          # Edit log dialog
 │   │   ├── index.tsx
-│   │   ├── validators.ts        # Yup schema
-│   │   └── utils.ts
-│   └── ServiceLogTable/         # Logs table with search/filters
+│   │   ├── styles.ts
+│   │   ├── components/
+│   │   │   ├── FormFields.tsx
+│   │   │   └── index.ts
+│   │   └── hooks/
+│   │       ├── useEditServiceLogForm.ts
+│   │       └── index.ts
+│   ├── ServiceLogForm/                # Create form with draft support
+│   │   ├── index.tsx
+│   │   ├── styles.ts
+│   │   ├── validators.ts              # Yup schema
+│   │   ├── utils.ts
+│   │   ├── components/
+│   │   │   ├── DraftsList.tsx
+│   │   │   ├── FormFields.tsx
+│   │   │   ├── FormHeader.tsx
+│   │   │   ├── SaveStatusAlerts.tsx
+│   │   │   └── index.ts
+│   │   └── hooks/
+│   │       ├── useServiceLogForm.ts
+│   │       └── index.ts
+│   └── ServiceLogTable/               # Logs table with search/filters
 │       ├── index.tsx
+│       ├── styles.ts
 │       ├── constants.ts
-│       └── utils.ts
+│       ├── utils.ts
+│       └── components/
+│           ├── ConfirmDialog.tsx
+│           └── index.ts
 ├── constants/
+│   └── serviceLog.ts                  # SERVICE_TYPES, AUTO_SAVE_DELAY
 ├── store/
-│   ├── slices/
-│   │   ├── draftsSlice.ts
-│   │   └── serviceLogsSlice.ts
-│   ├── hooks.ts
-│   └── index.ts
+│   ├── index.ts                       # Store + redux-persist config
+│   ├── hooks.ts                       # useAppDispatch, useAppSelector
+│   └── slices/
+│       ├── draftsSlice.ts             # Drafts, newLogFormData, saveStatus
+│       └── serviceLogsSlice.ts         # Service logs CRUD
 ├── types/
+│   └── serviceLog.ts                  # ServiceLog, ServiceLogDraft, etc.
 ├── utils/
+│   ├── date.ts                       # date-fns helpers
+│   └── id.ts                         # UUID generation
 ├── App.tsx
 └── main.tsx
 ```
